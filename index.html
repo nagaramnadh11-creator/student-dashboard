@@ -1,0 +1,1312 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ramnadh – Student Dashboard | CSE 1st Year</title>
+    <!-- Google Fonts: Inter & Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@600;700;800&display=swap" rel="stylesheet">
+    <!-- Font Awesome for clean academic icons (No profile avatars used) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <!-- Tailwind CSS for responsive layout utilities -->
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <style>
+        /* ==========================================================================
+           CSS VARIABLES & THEME CONFIGURATION (Navy Blue, Purple & White Theme)
+           ========================================================================== */
+        :root {
+            --navy-950: #0a0f24;
+            --navy-900: #0f1736;
+            --navy-800: #18234d;
+            --navy-700: #23326b;
+            --purple-700: #5b21b6;
+            --purple-600: #7c3aed;
+            --purple-500: #8b5cf6;
+            --purple-100: #ede9fe;
+            --purple-50: #f5f3ff;
+            --bg-main: #f4f6fb;
+            --surface-white: #ffffff;
+            --text-primary: #0f1736;
+            --text-secondary: #475569;
+            --text-muted: #64748b;
+            --border-color: #e2e8f0;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --shadow-sm: 0 2px 8px rgba(15, 23, 54, 0.04);
+            --shadow-md: 0 8px 24px rgba(15, 23, 54, 0.08);
+            --shadow-lg: 0 14px 32px rgba(91, 33, 182, 0.14);
+            --transition: all 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            line-height: 1.5;
+        }
+
+        h1, h2, h3, h4, .brand-font {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+        }
+
+        /* ==========================================================================
+           SIDEBAR NAVIGATION STYLING
+           ========================================================================== */
+        .sidebar {
+            background: linear-gradient(180deg, var(--navy-950) 0%, var(--navy-900) 65%, #1e1645 100%);
+            color: #ffffff;
+            width: 270px;
+            min-height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 50;
+            display: flex;
+            flex-direction: column;
+            transition: transform 0.3s ease;
+            box-shadow: 4px 0 24px rgba(10, 15, 36, 0.18);
+        }
+
+        .sidebar-header {
+            padding: 1.75rem 1.5rem;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.09);
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 0.875rem;
+            padding: 0.85rem 1.25rem;
+            margin: 0.3rem 0.9rem;
+            border-radius: 12px;
+            color: #cbd5e1;
+            font-weight: 500;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: var(--transition);
+            border: 1px solid transparent;
+            background: transparent;
+            width: calc(100% - 1.8rem);
+            text-align: left;
+        }
+
+        .nav-item:hover {
+            background: rgba(139, 92, 246, 0.16);
+            color: #ffffff;
+            transform: translateX(4px);
+        }
+
+        .nav-item.active {
+            background: linear-gradient(135deg, var(--purple-600), var(--purple-700));
+            color: #ffffff;
+            font-weight: 600;
+            box-shadow: 0 6px 18px rgba(124, 58, 237, 0.38);
+            border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .nav-item i {
+            width: 20px;
+            text-align: center;
+            font-size: 1.05rem;
+        }
+
+        /* ==========================================================================
+           MAIN LAYOUT & CARDS
+           ========================================================================== */
+        .main-wrapper {
+            margin-left: 270px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            transition: margin-left 0.3s ease;
+        }
+
+        .dashboard-card {
+            background: var(--surface-white);
+            border-radius: 16px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow-sm);
+            transition: var(--transition);
+        }
+
+        .dashboard-card:hover {
+            box-shadow: var(--shadow-md);
+            transform: translateY(-2px);
+        }
+
+        /* Welcome Banner Gradient */
+        .welcome-banner {
+            background: linear-gradient(135deg, var(--navy-900) 0%, var(--navy-700) 52%, var(--purple-700) 100%);
+            border-radius: 20px;
+            color: #ffffff;
+            position: relative;
+            overflow: hidden;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .welcome-banner::after {
+            content: "";
+            position: absolute;
+            top: -40%;
+            right: -10%;
+            width: 320px;
+            height: 320px;
+            background: radial-gradient(circle, rgba(139, 92, 246, 0.35) 0%, transparent 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        /* Progress Bars */
+        .progress-track {
+            width: 100%;
+            height: 10px;
+            background-color: #e2e8f0;
+            border-radius: 999px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 999px;
+            background: linear-gradient(90deg, var(--navy-700), var(--purple-600));
+            transition: width 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+        }
+
+        .progress-fill.high {
+            background: linear-gradient(90deg, #059669, #10b981);
+        }
+
+        .progress-fill.medium {
+            background: linear-gradient(90deg, var(--navy-700), var(--purple-600));
+        }
+
+        .progress-fill.warning {
+            background: linear-gradient(90deg, #d97706, #f59e0b);
+        }
+
+        /* Subject Cards */
+        .subject-card {
+            border-top: 4px solid var(--purple-600);
+            cursor: pointer;
+        }
+
+        .subject-card:hover {
+            border-color: var(--navy-800);
+        }
+
+        .subject-icon-box {
+            width: 50px;
+            height: 50px;
+            border-radius: 14px;
+            background: var(--purple-50);
+            color: var(--purple-700);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.35rem;
+            transition: var(--transition);
+        }
+
+        .subject-card:hover .subject-icon-box {
+            background: var(--purple-600);
+            color: #ffffff;
+        }
+
+        /* Section Transitions */
+        .content-section {
+            display: none;
+            animation: fadeSlideIn 0.35s ease forwards;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* Timetable Pills */
+        .day-tab {
+            padding: 0.6rem 1.15rem;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 0.875rem;
+            border: 1px solid var(--border-color);
+            background: #ffffff;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .day-tab:hover {
+            border-color: var(--purple-500);
+            color: var(--purple-700);
+        }
+
+        .day-tab.active {
+            background: var(--navy-900);
+            color: #ffffff;
+            border-color: var(--navy-900);
+            box-shadow: 0 4px 12px rgba(15, 23, 54, 0.2);
+        }
+
+        /* Mobile Backdrop */
+        .sidebar-backdrop {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(10, 15, 36, 0.55);
+            backdrop-filter: blur(2px);
+            z-index: 40;
+        }
+
+        .sidebar-backdrop.show {
+            display: block;
+        }
+
+        /* Responsive Breakpoints */
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            .main-wrapper {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Mobile Sidebar Overlay -->
+    <div id="sidebarBackdrop" class="sidebar-backdrop"></div>
+
+    <!-- ======================================================================
+         LEFT SIDEBAR NAVIGATION
+         ====================================================================== -->
+    <aside id="sidebar" class="sidebar" aria-label="Main Navigation">
+        <div class="sidebar-header flex items-center justify-between">
+            <div>
+                <span class="text-xs font-semibold uppercase tracking-wider text-purple-300 block mb-1">Academic Portal</span>
+                <h1 class="text-xl font-extrabold text-white tracking-tight">Ramnadh</h1>
+                <p class="text-xs text-slate-300 mt-0.5">CSE • 1st Year Student</p>
+            </div>
+            <button id="closeSidebarBtn" class="lg:hidden text-slate-300 hover:text-white p-2 rounded-lg" aria-label="Close Menu">
+                <i class="fa-solid fa-xmark text-xl"></i>
+            </button>
+        </div>
+
+        <!-- Text-Only Student Identification Card (Strict No-Avatar Policy) -->
+        <div class="mx-4 mt-4 p-3.5 rounded-xl bg-white/10 border border-white/10">
+            <div class="flex items-center justify-between">
+                <span class="text-xs text-purple-200 font-medium">Student Profile</span>
+                <span class="px-2 py-0.5 text-[11px] font-semibold bg-emerald-500/20 text-emerald-300 rounded-full">Active</span>
+            </div>
+            <p class="text-base font-bold text-white mt-1">Ramnadh</p>
+            <p class="text-xs text-slate-300">Computer Science & Eng.</p>
+            <p class="text-xs text-purple-300 font-medium mt-0.5">Year: 1st Year • Sem II</p>
+        </div>
+
+        <nav class="mt-5 flex-1 overflow-y-auto pb-4">
+            <p class="px-6 text-[11px] font-semibold uppercase tracking-wider text-slate-400 mb-2">Menu</p>
+            <button class="nav-item active" data-target="overview">
+                <i class="fa-solid fa-chart-pie"></i>
+                <span>Dashboard Overview</span>
+            </button>
+            <button class="nav-item" data-target="attendance">
+                <i class="fa-solid fa-calendar-check"></i>
+                <span>Attendance</span>
+            </button>
+            <button class="nav-item" data-target="marks">
+                <i class="fa-solid fa-award"></i>
+                <span>Academic Marks</span>
+            </button>
+            <button class="nav-item" data-target="timetable">
+                <i class="fa-solid fa-clock"></i>
+                <span>Timetable</span>
+            </button>
+            <button class="nav-item" data-target="subjects">
+                <i class="fa-solid fa-book-open"></i>
+                <span>My Subjects</span>
+            </button>
+            <button class="nav-item" data-target="notifications">
+                <i class="fa-solid fa-bell"></i>
+                <span>Notifications</span>
+                <span id="sidebarNotifBadge" class="ml-auto bg-purple-500 text-white text-xs font-bold px-2 py-0.5 rounded-full">4</span>
+            </button>
+            <button class="nav-item" data-target="examination">
+                <i class="fa-solid fa-file-signature"></i>
+                <span>Examination</span>
+            </button>
+        </nav>
+
+        <div class="p-4 border-t border-white/10 text-xs text-slate-400">
+            <p class="font-medium text-slate-300">Demonstration Dataset</p>
+            <p class="mt-0.5">Web Development Assignment</p>
+        </div>
+    </aside>
+
+    <!-- ======================================================================
+         MAIN CONTENT AREA
+         ====================================================================== -->
+    <div class="main-wrapper">
+        <!-- Top Header Bar -->
+        <header class="bg-white border-b border-slate-200 sticky top-0 z-30 px-4 sm:px-8 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <button id="openSidebarBtn" class="lg:hidden p-2.5 rounded-xl bg-slate-100 text-slate-800 hover:bg-purple-100 hover:text-purple-700 transition" aria-label="Open Menu">
+                    <i class="fa-solid fa-bars text-lg"></i>
+                </button>
+                <div>
+                    <h2 id="pageTitle" class="text-lg sm:text-xl font-bold text-slate-900">Dashboard Overview</h2>
+                    <p class="text-xs text-slate-500 hidden sm:block">Sample Academic Demonstration Data • 1st Year CSE</p>
+                </div>
+            </div>
+
+            <!-- Right Header Text-Only Student Info & Quick Notification Trigger -->
+            <div class="flex items-center gap-3 sm:gap-5">
+                <span class="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-purple-50 text-purple-700 border border-purple-200">
+                    <i class="fa-solid fa-flask"></i> Demo Data Mode
+                </span>
+
+                <button id="headerNotifBtn" class="relative p-2.5 rounded-xl bg-slate-100 hover:bg-purple-100 text-slate-700 hover:text-purple-700 transition" title="View Notifications">
+                    <i class="fa-regular fa-bell text-lg"></i>
+                    <span id="headerNotifDot" class="absolute top-2 right-2 w-2.5 h-2.5 bg-purple-600 rounded-full ring-2 ring-white"></span>
+                </button>
+
+                <!-- Text-only Student Identity Block (No image/avatar) -->
+                <div class="text-right border-l border-slate-200 pl-3 sm:pl-4">
+                    <p class="text-sm font-bold text-slate-900 leading-tight">Ramnadh</p>
+                    <p class="text-xs font-medium text-purple-700">CSE • 1st Year</p>
+                </div>
+            </div>
+        </header>
+
+        <!-- Main Workspace Container -->
+        <main class="flex-1 p-4 sm:p-6 lg:p-8 max-w-7xl w-full mx-auto space-y-6">
+
+            <!-- ==============================================================
+                 SECTION 1: DASHBOARD OVERVIEW
+                 ============================================================== -->
+            <section id="section-overview" class="content-section active space-y-6">
+                <!-- Welcome Banner -->
+                <div class="welcome-banner p-6 sm:p-8">
+                    <div class="relative z-10 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+                        <div>
+                            <span class="inline-block px-3 py-1 rounded-full bg-white/15 text-purple-200 text-xs font-semibold mb-3">
+                                Academic Year 2026–2027 • Semester II
+                            </span>
+                            <h2 class="text-2xl sm:text-3xl font-extrabold tracking-tight">Welcome back, Ramnadh!</h2>
+                            <p class="text-slate-200 mt-2 text-sm sm:text-base max-w-2xl">
+                                Department of Computer Science and Engineering (CSE) — 1st Year. Track your attendance, internal assessment scores, weekly timetable, and upcoming examination updates in one place.
+                            </p>
+                        </div>
+                        <div class="bg-white/10 backdrop-blur-sm border border-white/15 rounded-2xl p-4 sm:min-w-[230px]">
+                            <p class="text-xs uppercase tracking-wider text-purple-200 font-semibold">Student Record</p>
+                            <p class="text-lg font-bold text-white mt-1">Ramnadh</p>
+                            <p class="text-xs text-slate-200 mt-0.5">Dept: CSE (1st Year)</p>
+                            <p class="text-xs text-emerald-300 font-semibold mt-2">Status: Good Academic Standing</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 4 Key Metric Cards -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+                    <div class="dashboard-card p-5">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Total Subjects</span>
+                            <span class="w-10 h-10 rounded-xl bg-purple-100 text-purple-700 flex items-center justify-center">
+                                <i class="fa-solid fa-layer-group"></i>
+                            </span>
+                        </div>
+                        <p class="text-3xl font-extrabold text-slate-900 mt-3">5</p>
+                        <p class="text-xs text-slate-500 mt-1">Core 1st Year CSE Courses</p>
+                    </div>
+
+                    <div class="dashboard-card p-5">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Overall Attendance</span>
+                            <span class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center">
+                                <i class="fa-solid fa-user-check"></i>
+                            </span>
+                        </div>
+                        <p id="overviewAttendanceVal" class="text-3xl font-extrabold text-slate-900 mt-3">88.4%</p>
+                        <p class="text-xs text-emerald-600 font-medium mt-1">Above 75% required threshold</p>
+                    </div>
+
+                    <div class="dashboard-card p-5">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Average Score</span>
+                            <span class="w-10 h-10 rounded-xl bg-indigo-100 text-indigo-700 flex items-center justify-center">
+                                <i class="fa-solid fa-chart-line"></i>
+                            </span>
+                        </div>
+                        <p id="overviewAvgMarksVal" class="text-3xl font-extrabold text-slate-900 mt-3">86.8%</p>
+                        <p class="text-xs text-indigo-600 font-medium mt-1">Grade A (Demonstration Data)</p>
+                    </div>
+
+                    <div class="dashboard-card p-5">
+                        <div class="flex items-center justify-between">
+                            <span class="text-xs font-semibold uppercase tracking-wider text-slate-500">Upcoming Exams</span>
+                            <span class="w-10 h-10 rounded-xl bg-amber-100 text-amber-700 flex items-center justify-center">
+                                <i class="fa-solid fa-calendar-day"></i>
+                            </span>
+                        </div>
+                        <p class="text-3xl font-extrabold text-slate-900 mt-3">5</p>
+                        <p class="text-xs text-slate-500 mt-1">Mid-Semester Assessment</p>
+                    </div>
+                </div>
+
+                <!-- Academic Overview Split Grid -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Student Information & Course Summary -->
+                    <div class="dashboard-card p-6 lg:col-span-2">
+                        <div class="flex items-center justify-between mb-4">
+                            <div>
+                                <h3 class="text-lg font-bold text-slate-900">Academic Progress Summary</h3>
+                                <p class="text-xs text-slate-500">Syllabus completion & attendance across your 5 subjects</p>
+                            </div>
+                            <button onclick="switchSection('subjects')" class="text-xs font-semibold text-purple-700 hover:text-purple-900 bg-purple-50 px-3 py-1.5 rounded-lg transition">
+                                View All Subjects →
+                            </button>
+                        </div>
+                        <div id="overviewSubjectProgressList" class="space-y-4">
+                            <!-- Populated dynamically via JavaScript -->
+                        </div>
+                    </div>
+
+                    <!-- Student Details & Quick Actions -->
+                    <div class="dashboard-card p-6 flex flex-col justify-between">
+                        <div>
+                            <h3 class="text-lg font-bold text-slate-900 mb-4">Student Details</h3>
+                            <ul class="space-y-3 text-sm">
+                                <li class="flex justify-between py-2 border-b border-slate-100">
+                                    <span class="text-slate-500">Student Name</span>
+                                    <span class="font-bold text-slate-900">Ramnadh</span>
+                                </li>
+                                <li class="flex justify-between py-2 border-b border-slate-100">
+                                    <span class="text-slate-500">Department</span>
+                                    <span class="font-semibold text-slate-800 text-right">Computer Science & Engineering</span>
+                                </li>
+                                <li class="flex justify-between py-2 border-b border-slate-100">
+                                    <span class="text-slate-500">Academic Year</span>
+                                    <span class="font-semibold text-purple-700">1st Year</span>
+                                </li>
+                                <li class="flex justify-between py-2 border-b border-slate-100">
+                                    <span class="text-slate-500">Enrolled Subjects</span>
+                                    <span class="font-semibold text-slate-800">5 Subjects</span>
+                                </li>
+                                <li class="flex justify-between py-2">
+                                    <span class="text-slate-500">Dataset Label</span>
+                                    <span class="px-2 py-0.5 text-xs font-semibold bg-slate-100 text-slate-700 rounded">Sample Demo Data</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <div class="mt-6 pt-4 border-t border-slate-100 grid grid-cols-2 gap-2.5">
+                            <button onclick="switchSection('timetable')" class="py-2.5 px-3 rounded-xl bg-slate-900 text-white text-xs font-semibold hover:bg-slate-800 transition">
+                                <i class="fa-solid fa-clock mr-1"></i> Timetable
+                            </button>
+                            <button onclick="switchSection('marks')" class="py-2.5 px-3 rounded-xl bg-purple-600 text-white text-xs font-semibold hover:bg-purple-700 transition">
+                                <i class="fa-solid fa-award mr-1"></i> View Marks
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==============================================================
+                 SECTION 2: ATTENDANCE
+                 ============================================================== -->
+            <section id="section-attendance" class="content-section space-y-6">
+                <div class="dashboard-card p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                        <h3 class="text-xl font-bold text-slate-900">Attendance Tracker</h3>
+                        <p class="text-sm text-slate-500">Subject-wise class attendance record for Ramnadh (Sample Demonstration Data)</p>
+                    </div>
+                    <div class="flex items-center gap-3 bg-purple-50 border border-purple-200 px-4 py-3 rounded-xl">
+                        <div>
+                            <p class="text-xs font-semibold text-purple-700 uppercase">Overall Attendance</p>
+                            <p id="attendancePageOverall" class="text-2xl font-extrabold text-slate-900">88.4%</p>
+                        </div>
+                        <span class="px-2.5 py-1 rounded-lg bg-emerald-600 text-white text-xs font-bold">Eligible</span>
+                    </div>
+                </div>
+
+                <!-- Summary Counters -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-5">
+                    <div class="dashboard-card p-5 border-l-4 border-indigo-900">
+                        <p class="text-xs font-semibold text-slate-500 uppercase">Total Classes Conducted</p>
+                        <p id="totalClassesCount" class="text-2xl font-extrabold text-slate-900 mt-1">190</p>
+                    </div>
+                    <div class="dashboard-card p-5 border-l-4 border-emerald-500">
+                        <p class="text-xs font-semibold text-slate-500 uppercase">Total Classes Present</p>
+                        <p id="totalPresentCount" class="text-2xl font-extrabold text-emerald-600 mt-1">168</p>
+                    </div>
+                    <div class="dashboard-card p-5 border-l-4 border-rose-500">
+                        <p class="text-xs font-semibold text-slate-500 uppercase">Total Classes Absent</p>
+                        <p id="totalAbsentCount" class="text-2xl font-extrabold text-rose-600 mt-1">22</p>
+                    </div>
+                </div>
+
+                <!-- Subject-wise Attendance Cards with Progress Bars -->
+                <div id="attendanceCardsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                    <!-- Populated via JS -->
+                </div>
+            </section>
+
+            <!-- ==============================================================
+                 SECTION 3: ACADEMIC MARKS
+                 ============================================================== -->
+            <section id="section-marks" class="content-section space-y-6">
+                <div class="dashboard-card p-6 flex flex-col md:flex-row md:items-center justify-between gap-4">
+                    <div>
+                        <h3 class="text-xl font-bold text-slate-900">Academic Marks & Grade Report</h3>
+                        <p class="text-sm text-slate-500">Internal & Mid-Term Performance (Sample Demonstration Data)</p>
+                    </div>
+                    <div class="flex flex-wrap gap-3">
+                        <div class="px-4 py-2.5 rounded-xl bg-slate-900 text-white">
+                            <span class="text-xs text-slate-300 block">Total Marks</span>
+                            <span id="marksTotalDisplay" class="text-lg font-extrabold">434 / 500</span>
+                        </div>
+                        <div class="px-4 py-2.5 rounded-xl bg-purple-600 text-white">
+                            <span class="text-xs text-purple-200 block">Average Percentage</span>
+                            <span id="marksAverageDisplay" class="text-lg font-extrabold">86.8% (Grade A)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Marks Table Card -->
+                <div class="dashboard-card overflow-hidden">
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-slate-900 text-white text-xs uppercase tracking-wider">
+                                    <th class="py-4 px-6">Subject Name</th>
+                                    <th class="py-4 px-6">Internal (30)</th>
+                                    <th class="py-4 px-6">Mid-Exam (70)</th>
+                                    <th class="py-4 px-6">Total (100)</th>
+                                    <th class="py-4 px-6">Progress</th>
+                                    <th class="py-4 px-6">Grade</th>
+                                </tr>
+                            </thead>
+                            <tbody id="marksTableBody" class="divide-y divide-slate-200 text-sm">
+                                <!-- Populated via JS -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==============================================================
+                 SECTION 4: TIMETABLE
+                 ============================================================== -->
+            <section id="section-timetable" class="content-section space-y-6">
+                <div class="dashboard-card p-6">
+                    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-6">
+                        <div>
+                            <h3 class="text-xl font-bold text-slate-900">Weekly Class Timetable</h3>
+                            <p class="text-sm text-slate-500">CSE 1st Year Weekly Schedule featuring all 5 enrolled subjects</p>
+                        </div>
+                        <!-- Day Filter Buttons -->
+                        <div id="timetableDayTabs" class="flex flex-wrap gap-2">
+                            <button class="day-tab active" data-day="All">Full Week</button>
+                            <button class="day-tab" data-day="Monday">Mon</button>
+                            <button class="day-tab" data-day="Tuesday">Tue</button>
+                            <button class="day-tab" data-day="Wednesday">Wed</button>
+                            <button class="day-tab" data-day="Thursday">Thu</button>
+                            <button class="day-tab" data-day="Friday">Fri</button>
+                            <button class="day-tab" data-day="Saturday">Sat</button>
+                        </div>
+                    </div>
+
+                    <div id="timetableContainer" class="space-y-4">
+                        <!-- Populated dynamically via JS -->
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==============================================================
+                 SECTION 5: MY SUBJECTS
+                 ============================================================== -->
+            <section id="section-subjects" class="content-section space-y-6">
+                <div class="dashboard-card p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                        <h3 class="text-xl font-bold text-slate-900">My Enrolled Subjects (5)</h3>
+                        <p class="text-sm text-slate-500">Click any subject card to inspect syllabus progress, attendance, and marks details</p>
+                    </div>
+                    <span class="px-3.5 py-1.5 rounded-full bg-purple-100 text-purple-800 text-xs font-bold">
+                        CSE • 1st Year Curriculum
+                    </span>
+                </div>
+
+                <div id="subjectsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Five Subject Cards populated via JS -->
+                </div>
+
+                <!-- Interactive Subject Detail Drawer/Panel -->
+                <div id="subjectDetailBox" class="hidden dashboard-card p-6 border-2 border-purple-500 bg-purple-50/40">
+                    <div class="flex items-start justify-between gap-4">
+                        <div>
+                            <span class="text-xs font-bold uppercase tracking-wider text-purple-700">Selected Subject Details</span>
+                            <h4 id="detailSubjectTitle" class="text-xl font-extrabold text-slate-900 mt-1">Subject Name</h4>
+                            <p id="detailSubjectDesc" class="text-sm text-slate-600 mt-2 max-w-3xl">Description</p>
+                        </div>
+                        <button id="closeSubjectDetailBtn" class="px-3 py-1.5 rounded-lg bg-white border border-slate-200 text-xs font-semibold text-slate-700 hover:bg-slate-100">
+                            Close ✕
+                        </button>
+                    </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-5 pt-4 border-t border-purple-200/60">
+                        <div class="bg-white p-3.5 rounded-xl border border-slate-200">
+                            <span class="text-xs text-slate-500">Syllabus Progress</span>
+                            <p id="detailSubjectSyllabus" class="text-lg font-bold text-purple-700 mt-0.5">85%</p>
+                        </div>
+                        <div class="bg-white p-3.5 rounded-xl border border-slate-200">
+                            <span class="text-xs text-slate-500">Class Attendance</span>
+                            <p id="detailSubjectAttendance" class="text-lg font-bold text-emerald-600 mt-0.5">90%</p>
+                        </div>
+                        <div class="bg-white p-3.5 rounded-xl border border-slate-200">
+                            <span class="text-xs text-slate-500">Current Score</span>
+                            <p id="detailSubjectMarks" class="text-lg font-bold text-slate-900 mt-0.5">88 / 100</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- ==============================================================
+                 SECTION 6: NOTIFICATIONS
+                 ============================================================== -->
+            <section id="section-notifications" class="content-section space-y-6">
+                <div class="dashboard-card p-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <div>
+                        <h3 class="text-xl font-bold text-slate-900">Academic Notifications & Updates</h3>
+                        <p class="text-sm text-slate-500">College announcements, assignment deadlines, and exam notices (Sample Data)</p>
+                    </div>
+                    <div class="flex flex-wrap gap-2">
+                        <button class="notif-filter-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-900 text-white" data-filter="all">All</button>
+                        <button class="notif-filter-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-purple-100" data-filter="Assignment">Assignments</button>
+                        <button class="notif-filter-btn px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-slate-100 text-slate-700 hover:bg-purple-100" data-filter="Exam">Examinations</button>
+                        <button id="markAllReadBtn" class="px-3.5 py-1.5 rounded-lg text-xs font-semibold bg-purple-600 text-white hover:bg-purple-700 transition">
+                            Mark All Read
+                        </button>
+                    </div>
+                </div>
+
+                <div id="notificationsList" class="space-y-4">
+                    <!-- Populated via JS -->
+                </div>
+            </section>
+
+            <!-- ==============================================================
+                 SECTION 7: EXAMINATION
+                 ============================================================== -->
+            <section id="section-examination" class="content-section space-y-6">
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Upcoming Exam Schedule -->
+                    <div class="dashboard-card p-6 lg:col-span-2">
+                        <div class="flex items-center justify-between mb-4">
+                            <div>
+                                <h3 class="text-xl font-bold text-slate-900">Upcoming Examination Schedule</h3>
+                                <p class="text-xs text-slate-500">1st Year CSE Semester-End Theory Schedule (Demonstration Data)</p>
+                            </div>
+                            <span class="px-3 py-1 rounded-full bg-amber-100 text-amber-800 text-xs font-bold">Upcoming</span>
+                        </div>
+
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left border-collapse">
+                                <thead>
+                                    <tr class="bg-slate-100 text-slate-700 text-xs uppercase">
+                                        <th class="py-3 px-4 rounded-l-lg">Date & Day</th>
+                                        <th class="py-3 px-4">Subject</th>
+                                        <th class="py-3 px-4">Timing</th>
+                                        <th class="py-3 px-4 rounded-r-lg">Session</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="examScheduleBody" class="divide-y divide-slate-200 text-sm">
+                                    <!-- Populated via JS -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Results & Hall Ticket Info Card -->
+                    <div class="dashboard-card p-6 space-y-5">
+                        <div>
+                            <h3 class="text-lg font-bold text-slate-900">Results & Exam Status</h3>
+                            <p class="text-xs text-slate-500 mt-1">Academic evaluation summary for Ramnadh</p>
+                        </div>
+
+                        <div class="p-4 rounded-xl bg-purple-50 border border-purple-200">
+                            <p class="text-xs font-bold uppercase text-purple-700">Mid-Semester Result Status</p>
+                            <p class="text-lg font-extrabold text-slate-900 mt-1">Published (Passed All 5)</p>
+                            <p class="text-xs text-slate-600 mt-1">Aggregate Percentage: <strong>86.8%</strong></p>
+                        </div>
+
+                        <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2 text-xs text-slate-600">
+                            <p class="font-bold text-slate-900 text-sm">Examination Guidelines:</p>
+                            <p>• Carry your student ID card to the examination hall.</p>
+                            <p>• Minimum 75% subject attendance is required.</p>
+                            <p>• Note: Dates shown are sample demonstration dates.</p>
+                        </div>
+
+                        <button onclick="switchSection('marks')" class="w-full py-3 rounded-xl bg-slate-900 text-white text-xs font-bold hover:bg-purple-700 transition">
+                            View Detailed Marksheet →
+                        </button>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <!-- ==================================================================
+             SECTION 8: FOOTER
+             ================================================================== -->
+        <footer class="bg-white border-t border-slate-200 mt-12 px-4 sm:px-8 py-6">
+            <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4 text-xs text-slate-500">
+                <div>
+                    <p class="font-bold text-slate-800 text-sm">Ramnadh – Student Dashboard</p>
+                    <p class="mt-0.5">Department of Computer Science and Engineering (CSE) • 1st Year • Academic Year 2026–2027</p>
+                </div>
+                <div class="flex flex-wrap items-center gap-4">
+                    <span class="px-2.5 py-1 rounded bg-slate-100 text-slate-600 font-medium">Sample Demonstration Data</span>
+                    <button onclick="switchSection('notifications')" class="text-purple-700 font-semibold hover:underline">Academic Support & Notices</button>
+                </div>
+            </div>
+        </footer>
+    </div>
+
+    <!-- ======================================================================
+         JAVASCRIPT APPLICATION LOGIC
+         ====================================================================== -->
+    <script>
+        /* ==========================================================================
+           1. DEMONSTRATION ACADEMIC DATA FOR RAMNADH (1ST YEAR CSE)
+           ========================================================================== */
+        const studentSubjects = [
+            {
+                id: "python",
+                name: "Python Programming",
+                code: "CSE101",
+                icon: "fa-brands fa-python",
+                description: "Core programming fundamentals, data structures, functions, file handling, and object-oriented problem solving using Python.",
+                syllabusProgress: 88,
+                classesConducted: 42,
+                classesPresent: 38,
+                internalMarks: 27,
+                midMarks: 63
+            },
+            {
+                id: "html",
+                name: "HTML",
+                code: "CSE102",
+                icon: "fa-brands fa-html5",
+                description: "Semantic HTML5 document structure, accessible web forms, multimedia integration, and modern responsive web foundations.",
+                syllabusProgress: 92,
+                classesConducted: 38,
+                classesPresent: 35,
+                internalMarks: 28,
+                midMarks: 64
+            },
+            {
+                id: "genai",
+                name: "Generative AI (Gen AI)",
+                code: "CSE103",
+                icon: "fa-solid fa-wand-magic-sparkles",
+                description: "Introduction to Large Language Models, prompt engineering techniques, AI-assisted workflows, and responsible AI applications.",
+                syllabusProgress: 80,
+                classesConducted: 36,
+                classesPresent: 32,
+                internalMarks: 26,
+                midMarks: 61
+            },
+            {
+                id: "math",
+                name: "Mathematics",
+                code: "MAT101",
+                icon: "fa-solid fa-square-root-variable",
+                description: "Engineering calculus, linear algebra, matrices, and discrete mathematical structures essential for computer science.",
+                syllabusProgress: 84,
+                classesConducted: 40,
+                classesPresent: 34,
+                internalMarks: 25,
+                midMarks: 58
+            },
+            {
+                id: "aptitude",
+                name: "Aptitude",
+                code: "APT101",
+                icon: "fa-solid fa-brain",
+                description: "Quantitative reasoning, logical puzzles, analytical thinking, and verbal ability for technical assessments.",
+                syllabusProgress: 86,
+                classesConducted: 34,
+                classesPresent: 29,
+                internalMarks: 26,
+                midMarks: 56
+            }
+        ];
+
+        const weeklyTimetable = [
+            {
+                day: "Monday",
+                slots: [
+                    { time: "09:30 AM – 10:30 AM", subject: "Python Programming", type: "Theory Lecture" },
+                    { time: "10:45 AM – 11:45 AM", subject: "Mathematics", type: "Problem Solving" },
+                    { time: "01:30 PM – 03:30 PM", subject: "HTML", type: "Web Lab Session" }
+                ]
+            },
+            {
+                day: "Tuesday",
+                slots: [
+                    { time: "09:30 AM – 10:30 AM", subject: "Generative AI (Gen AI)", type: "Interactive Lecture" },
+                    { time: "10:45 AM – 11:45 AM", subject: "Aptitude", type: "Logical Reasoning" },
+                    { time: "01:30 PM – 02:30 PM", subject: "Python Programming", type: "Coding Practice" }
+                ]
+            },
+            {
+                day: "Wednesday",
+                slots: [
+                    { time: "09:30 AM – 10:30 AM", subject: "HTML", type: "Frontend Workshop" },
+                    { time: "10:45 AM – 11:45 AM", subject: "Mathematics", type: "Tutorial" },
+                    { time: "01:30 PM – 03:30 PM", subject: "Generative AI (Gen AI)", type: "Prompt Lab" }
+                ]
+            },
+            {
+                day: "Thursday",
+                slots: [
+                    { time: "09:30 AM – 10:30 AM", subject: "Python Programming", type: "Theory Lecture" },
+                    { time: "10:45 AM – 11:45 AM", subject: "Aptitude", type: "Quantitative Practice" },
+                    { time: "01:30 PM – 02:30 PM", subject: "Mathematics", type: "Theory Lecture" }
+                ]
+            },
+            {
+                day: "Friday",
+                slots: [
+                    { time: "09:30 AM – 10:30 AM", subject: "Generative AI (Gen AI)", type: "Case Study" },
+                    { time: "10:45 AM – 11:45 AM", subject: "HTML", type: "Project Review" },
+                    { time: "01:30 PM – 03:30 PM", subject: "Python Programming", type: "Programming Lab" }
+                ]
+            },
+            {
+                day: "Saturday",
+                slots: [
+                    { time: "10:00 AM – 11:30 AM", subject: "Aptitude", type: "Weekly Mock Test" },
+                    { time: "11:45 AM – 01:00 PM", subject: "Mathematics", type: "Revision Session" }
+                ]
+            }
+        ];
+
+        let notificationsData = [
+            {
+                id: 1,
+                category: "Assignment",
+                title: "HTML Web Development Project Submission",
+                message: "Submit your responsive Student Dashboard project with clean HTML5, CSS3, and JavaScript structure.",
+                date: "Due: Nov 28, 2026",
+                unread: true
+            },
+            {
+                id: 2,
+                category: "Exam",
+                title: "Semester-End Examination Timetable Released",
+                message: "The tentative schedule for 1st Year CSE subjects (Python, HTML, Gen AI, Mathematics, Aptitude) is now available.",
+                date: "Posted: Nov 22, 2026",
+                unread: true
+            },
+            {
+                id: 3,
+                category: "Assignment",
+                title: "Python Programming Lab Record Verification",
+                message: "Complete lab exercises on functions and file handling before Friday's lab session.",
+                date: "Due: Nov 27, 2026",
+                unread: true
+            },
+            {
+                id: 4,
+                category: "Announcement",
+                title: "Generative AI (Gen AI) Hands-on Workshop",
+                message: "Special practical session on structured prompt design for 1st Year Computer Science students.",
+                date: "Date: Dec 02, 2026",
+                unread: true
+            }
+        ];
+
+        const examScheduleData = [
+            { date: "Dec 10, 2026 (Thu)", subject: "Python Programming", time: "10:00 AM – 01:00 PM", session: "Morning" },
+            { date: "Dec 12, 2026 (Sat)", subject: "HTML", time: "10:00 AM – 01:00 PM", session: "Morning" },
+            { date: "Dec 15, 2026 (Tue)", subject: "Generative AI (Gen AI)", time: "10:00 AM – 01:00 PM", session: "Morning" },
+            { date: "Dec 17, 2026 (Thu)", subject: "Mathematics", time: "10:00 AM – 01:00 PM", session: "Morning" },
+            { date: "Dec 19, 2026 (Sat)", subject: "Aptitude", time: "10:00 AM – 12:00 PM", session: "Morning" }
+        ];
+
+        /* ==========================================================================
+           2. HELPER FUNCTIONS
+           ========================================================================== */
+        function calculateGrade(total) {
+            if (total >= 90) return { grade: "A+", badge: "bg-emerald-100 text-emerald-800" };
+            if (total >= 80) return { grade: "A", badge: "bg-purple-100 text-purple-800" };
+            if (total >= 70) return { grade: "B+", badge: "bg-indigo-100 text-indigo-800" };
+            return { grade: "B", badge: "bg-amber-100 text-amber-800" };
+        }
+
+        /* ==========================================================================
+           3. RENDER FUNCTIONS FOR ALL DASHBOARD SECTIONS
+           ========================================================================== */
+        function renderOverviewProgress() {
+            const container = document.getElementById("overviewSubjectProgressList");
+            container.innerHTML = studentSubjects.map(sub => {
+                const attPercent = Math.round((sub.classesPresent / sub.classesConducted) * 100);
+                return `
+                    <div>
+                        <div class="flex justify-between items-center text-sm mb-1.5">
+                            <span class="font-semibold text-slate-800 flex items-center gap-2">
+                                <i class="${sub.icon} text-purple-600 w-4"></i>
+                                ${sub.name}
+                            </span>
+                            <span class="text-xs font-bold text-slate-600">Syllabus: ${sub.syllabusProgress}% • Att: ${attPercent}%</span>
+                        </div>
+                        <div class="progress-track">
+                            <div class="progress-fill" style="width: ${sub.syllabusProgress}%"></div>
+                        </div>
+                    </div>
+                `;
+            }).join("");
+        }
+
+        function renderAttendanceSection() {
+            let totalConducted = 0;
+            let totalPresent = 0;
+
+            const cardsHtml = studentSubjects.map(sub => {
+                totalConducted += sub.classesConducted;
+                totalPresent += sub.classesPresent;
+                const absent = sub.classesConducted - sub.classesPresent;
+                const pct = ((sub.classesPresent / sub.classesConducted) * 100).toFixed(1);
+                const barClass = pct >= 85 ? "high" : "medium";
+
+                return `
+                    <div class="dashboard-card p-5">
+                        <div class="flex items-center justify-between mb-3">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl bg-purple-50 text-purple-700 flex items-center justify-center text-lg">
+                                    <i class="${sub.icon}"></i>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-slate-900">${sub.name}</h4>
+                                    <span class="text-xs text-slate-500">Course Code: ${sub.code}</span>
+                                </div>
+                            </div>
+                            <span class="text-lg font-extrabold text-purple-700">${pct}%</span>
+                        </div>
+                        <div class="progress-track mb-3">
+                            <div class="progress-fill ${barClass}" style="width: ${pct}%"></div>
+                        </div>
+                        <div class="flex justify-between text-xs text-slate-600 pt-1">
+                            <span>Conducted: <strong>${sub.classesConducted}</strong></span>
+                            <span class="text-emerald-700">Present: <strong>${sub.classesPresent}</strong></span>
+                            <span class="text-rose-600">Absent: <strong>${absent}</strong></span>
+                        </div>
+                    </div>
+                `;
+            }).join("");
+
+            const overallPct = ((totalPresent / totalConducted) * 100).toFixed(1);
+            document.getElementById("attendanceCardsContainer").innerHTML = cardsHtml;
+            document.getElementById("totalClassesCount").textContent = totalConducted;
+            document.getElementById("totalPresentCount").textContent = totalPresent;
+            document.getElementById("totalAbsentCount").textContent = totalConducted - totalPresent;
+            document.getElementById("attendancePageOverall").textContent = `${overallPct}%`;
+            document.getElementById("overviewAttendanceVal").textContent = `${overallPct}%`;
+        }
+
+        function renderMarksSection() {
+            let grandTotal = 0;
+
+            const rowsHtml = studentSubjects.map(sub => {
+                const total = sub.internalMarks + sub.midMarks;
+                grandTotal += total;
+                const gradeObj = calculateGrade(total);
+
+                return `
+                    <tr class="hover:bg-slate-50 transition">
+                        <td class="py-4 px-6 font-bold text-slate-900 flex items-center gap-2.5">
+                            <i class="${sub.icon} text-purple-600"></i>
+                            ${sub.name}
+                        </td>
+                        <td class="py-4 px-6 text-slate-700">${sub.internalMarks} / 30</td>
+                        <td class="py-4 px-6 text-slate-700">${sub.midMarks} / 70</td>
+                        <td class="py-4 px-6 font-extrabold text-slate-900">${total} / 100</td>
+                        <td class="py-4 px-6 w-44">
+                            <div class="progress-track">
+                                <div class="progress-fill" style="width: ${total}%"></div>
+                            </div>
+                        </td>
+                        <td class="py-4 px-6">
+                            <span class="px-3 py-1 rounded-full text-xs font-bold ${gradeObj.badge}">${gradeObj.grade}</span>
+                        </td>
+                    </tr>
+                `;
+            }).join("");
+
+            const avgPct = (grandTotal / studentSubjects.length).toFixed(1);
+            document.getElementById("marksTableBody").innerHTML = rowsHtml;
+            document.getElementById("marksTotalDisplay").textContent = `${grandTotal} / 500`;
+            document.getElementById("marksAverageDisplay").textContent = `${avgPct}% (Grade A)`;
+            document.getElementById("overviewAvgMarksVal").textContent = `${avgPct}%`;
+        }
+
+        function renderTimetable(selectedDay = "All") {
+            const container = document.getElementById("timetableContainer");
+            const filteredDays = selectedDay === "All"
+                ? weeklyTimetable
+                : weeklyTimetable.filter(item => item.day === selectedDay);
+
+            container.innerHTML = filteredDays.map(dayObj => `
+                <div class="border border-slate-200 rounded-2xl p-4 sm:p-5 bg-slate-50/60">
+                    <h4 class="font-bold text-slate-900 text-base mb-3 flex items-center gap-2">
+                        <span class="w-2.5 h-2.5 rounded-full bg-purple-600"></span>
+                        ${dayObj.day}
+                    </h4>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-3.5">
+                        ${dayObj.slots.map(slot => `
+                            <div class="bg-white p-4 rounded-xl border border-slate-200 shadow-xs hover:border-purple-400 transition">
+                                <span class="text-xs font-semibold text-purple-700 bg-purple-50 px-2.5 py-1 rounded-md inline-block">
+                                    <i class="fa-regular fa-clock mr-1"></i>${slot.time}
+                                </span>
+                                <p class="font-bold text-slate-900 mt-2.5">${slot.subject}</p>
+                                <p class="text-xs text-slate-500 mt-0.5">${slot.type}</p>
+                            </div>
+                        `).join("")}
+                    </div>
+                </div>
+            `).join("");
+        }
+
+        function renderSubjectsSection() {
+            const grid = document.getElementById("subjectsGrid");
+            grid.innerHTML = studentSubjects.map(sub => `
+                <div class="dashboard-card subject-card p-6 flex flex-col justify-between" onclick="openSubjectDetail('${sub.id}')">
+                    <div>
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="subject-icon-box">
+                                <i class="${sub.icon}"></i>
+                            </div>
+                            <span class="text-xs font-bold px-2.5 py-1 rounded-lg bg-slate-100 text-slate-700">${sub.code}</span>
+                        </div>
+                        <h4 class="text-lg font-extrabold text-slate-900">${sub.name}</h4>
+                        <p class="text-xs text-slate-600 mt-2 leading-relaxed">${sub.description}</p>
+                    </div>
+                    <div class="mt-5 pt-4 border-t border-slate-100">
+                        <div class="flex justify-between text-xs font-semibold mb-1.5">
+                            <span class="text-slate-500">Course Progress</span>
+                            <span class="text-purple-700">${sub.syllabusProgress}%</span>
+                        </div>
+                        <div class="progress-track">
+                            <div class="progress-fill" style="width: ${sub.syllabusProgress}%"></div>
+                        </div>
+                        <p class="text-[11px] text-purple-700 font-semibold mt-3">Click card for details →</p>
+                    </div>
+                </div>
+            `).join("");
+        }
+
+        function openSubjectDetail(subjectId) {
+            const sub = studentSubjects.find(s => s.id === subjectId);
+            if (!sub) return;
+
+            const attPct = ((sub.classesPresent / sub.classesConducted) * 100).toFixed(1);
+            const totalMarks = sub.internalMarks + sub.midMarks;
+
+            document.getElementById("detailSubjectTitle").textContent = `${sub.name} (${sub.code})`;
+            document.getElementById("detailSubjectDesc").textContent = sub.description;
+            document.getElementById("detailSubjectSyllabus").textContent = `${sub.syllabusProgress}% Completed`;
+            document.getElementById("detailSubjectAttendance").textContent = `${attPct}% (${sub.classesPresent}/${sub.classesConducted})`;
+            document.getElementById("detailSubjectMarks").textContent = `${totalMarks} / 100`;
+
+            const detailBox = document.getElementById("subjectDetailBox");
+            detailBox.classList.remove("hidden");
+            detailBox.scrollIntoView({ behavior: "smooth", block: "nearest" });
+        }
+
+        function renderNotifications(filter = "all") {
+            const list = document.getElementById("notificationsList");
+            const filtered = filter === "all"
+                ? notificationsData
+                : notificationsData.filter(n => n.category === filter);
+
+            list.innerHTML = filtered.map(notif => `
+                <div class="dashboard-card p-5 flex flex-col sm:flex-row sm:items-center justify-between gap-4 ${notif.unread ? 'border-l-4 border-l-purple-600 bg-purple-50/20' : ''}">
+                    <div class="space-y-1">
+                        <div class="flex items-center gap-2">
+                            <span class="px-2.5 py-0.5 rounded-md text-[11px] font-bold bg-slate-900 text-white">${notif.category}</span>
+                            <span class="text-xs text-slate-500 font-medium">${notif.date}</span>
+                            ${notif.unread ? '<span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-purple-100 text-purple-700">New</span>' : ''}
+                        </div>
+                        <h4 class="font-bold text-slate-900 text-base">${notif.title}</h4>
+                        <p class="text-sm text-slate-600">${notif.message}</p>
+                    </div>
+                    <button onclick="toggleNotificationRead(${notif.id})" class="self-start sm:self-center px-3.5 py-2 rounded-xl border border-slate-200 bg-white text-xs font-semibold text-slate-700 hover:bg-purple-50 hover:text-purple-700 transition shrink-0">
+                        ${notif.unread ? 'Mark Read' : 'Read ✓'}
+                    </button>
+                </div>
+            `).join("");
+
+            updateNotificationBadges();
+        }
+
+        function toggleNotificationRead(id) {
+            notificationsData = notificationsData.map(n =>
+                n.id === id ? { ...n, unread: !n.unread } : n
+            );
+            renderNotifications();
+        }
+
+        function updateNotificationBadges() {
+            const unreadCount = notificationsData.filter(n => n.unread).length;
+            const badge = document.getElementById("sidebarNotifBadge");
+            const dot = document.getElementById("headerNotifDot");
+
+            badge.textContent = unreadCount;
+            badge.style.display = unreadCount > 0 ? "inline-block" : "none";
+            dot.style.display = unreadCount > 0 ? "block" : "none";
+        }
+
+        function renderExaminationSection() {
+            const tbody = document.getElementById("examScheduleBody");
+            tbody.innerHTML = examScheduleData.map(exam => `
+                <tr class="hover:bg-slate-50 transition">
+                    <td class="py-3.5 px-4 font-semibold text-slate-800">${exam.date}</td>
+                    <td class="py-3.5 px-4 font-bold text-purple-800">${exam.subject}</td>
+                    <td class="py-3.5 px-4 text-slate-600">${exam.time}</td>
+                    <td class="py-3.5 px-4">
+                        <span class="px-2.5 py-1 rounded-md bg-slate-100 text-slate-700 text-xs font-semibold">${exam.session}</span>
+                    </td>
+                </tr>
+            `).join("");
+        }
+
+        /* ==========================================================================
+           4. NAVIGATION & INTERACTIVE EVENT LISTENERS
+           ========================================================================== */
+        const sectionTitles = {
+            overview: "Dashboard Overview",
+            attendance: "Attendance Tracker",
+            marks: "Academic Marks",
+            timetable: "Weekly Timetable",
+            subjects: "My Subjects",
+            notifications: "Notifications & Updates",
+            examination: "Examination Schedule"
+        };
+
+        function switchSection(targetId) {
+            // Update active section visibility
+            document.querySelectorAll(".content-section").forEach(sec => {
+                sec.classList.remove("active");
+            });
+            const activeSec = document.getElementById(`section-${targetId}`);
+            if (activeSec) activeSec.classList.add("active");
+
+            // Update active sidebar button
+            document.querySelectorAll(".nav-item").forEach(btn => {
+                btn.classList.toggle("active", btn.dataset.target === targetId);
+            });
+
+            // Update Header Title
+            document.getElementById("pageTitle").textContent = sectionTitles[targetId] || "Student Dashboard";
+
+            // Close mobile sidebar if open
+            closeMobileSidebar();
+            window.scrollTo({ top: 0, behavior: "smooth" });
+        }
+
+        function openMobileSidebar() {
+            document.getElementById("sidebar").classList.add("open");
+            document.getElementById("sidebarBackdrop").classList.add("show");
+        }
+
+        function closeMobileSidebar() {
+            document.getElementById("sidebar").classList.remove("open");
+            document.getElementById("sidebarBackdrop").classList.remove("show");
+        }
+
+        // Initialize Application on DOM Ready
+        document.addEventListener("DOMContentLoaded", () => {
+            renderOverviewProgress();
+            renderAttendanceSection();
+            renderMarksSection();
+            renderTimetable("All");
+            renderSubjectsSection();
+            renderNotifications("all");
+            renderExaminationSection();
+
+            // Sidebar Navigation Click Events
+            document.querySelectorAll(".nav-item").forEach(button => {
+                button.addEventListener("click", () => {
+                    switchSection(button.dataset.target);
+                });
+            });
+
+            // Mobile Menu Controls
+            document.getElementById("openSidebarBtn").addEventListener("click", openMobileSidebar);
+            document.getElementById("closeSidebarBtn").addEventListener("click", closeMobileSidebar);
+            document.getElementById("sidebarBackdrop").addEventListener("click", closeMobileSidebar);
+
+            // Header Notification Shortcut
+            document.getElementById("headerNotifBtn").addEventListener("click", () => {
+                switchSection("notifications");
+            });
+
+            // Timetable Day Filter Tabs
+            document.querySelectorAll(".day-tab").forEach(tab => {
+                tab.addEventListener("click", () => {
+                    document.querySelectorAll(".day-tab").forEach(t => t.classList.remove("active"));
+                    tab.classList.add("active");
+                    renderTimetable(tab.dataset.day);
+                });
+            });
+
+            // Close Subject Details Panel
+            document.getElementById("closeSubjectDetailBtn").addEventListener("click", () => {
+                document.getElementById("subjectDetailBox").classList.add("hidden");
+            });
+
+            // Notification Filters & Mark All Read
+            document.querySelectorAll(".notif-filter-btn").forEach(btn => {
+                btn.addEventListener("click", () => {
+                    document.querySelectorAll(".notif-filter-btn").forEach(b => {
+                        b.classList.remove("bg-slate-900", "text-white");
+                        b.classList.add("bg-slate-100", "text-slate-700");
+                    });
+                    btn.classList.remove("bg-slate-100", "text-slate-700");
+                    btn.classList.add("bg-slate-900", "text-white");
+                    renderNotifications(btn.dataset.filter);
+                });
+            });
+
+            document.getElementById("markAllReadBtn").addEventListener("click", () => {
+                notificationsData = notificationsData.map(n => ({ ...n, unread: false }));
+                renderNotifications("all");
+            });
+        });
+    </script>
+</body>
+</html>
